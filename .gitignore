@@ -1,0 +1,6 @@
+.asscache
+.DS_Store
+.gradle/
+build/
+.idea/
+*.iml
