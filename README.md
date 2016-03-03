@@ -3,8 +3,8 @@
 _This assumes you have Docker installed and the Docker host IP is 192.168.99.100. If you use a different IP, consider find/replace._
 
 1. Run `./setup.sh` to run and provision a Keycloak server
-2. Run `./startup.sh` to start the Grails applications (client and service)
-3. Browse to http://localhost:8080/ to access the client, which will dump a JSON returned by the service (KeycloakPrincipal)
+2. Start each Grails application in a separate terminal using `grails run-app`
+3. Browse to http://localhost:8080/client/ to access the client, which will dump a JSON returned by the service (KeycloakPrincipal)
 
 ## Versions
 
