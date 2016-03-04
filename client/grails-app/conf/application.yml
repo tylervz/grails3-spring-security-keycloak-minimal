@@ -3,10 +3,6 @@ server:
     port: 8080
     contextPath: /client
 
-security:
-    basic:
-        enabled: false
-
 ---
 grails:
     profile: web
