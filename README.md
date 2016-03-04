@@ -8,7 +8,7 @@ Run `./setup.sh` to run and provision a Keycloak server using Docker. Then, star
 # Terminal 1
 ./setup.sh
 
-#Terminal 2
+# Terminal 2
 cd client
 ./gradlew bootRun
 
