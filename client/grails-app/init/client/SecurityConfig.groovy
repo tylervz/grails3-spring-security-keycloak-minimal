@@ -49,7 +49,7 @@ class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .and()
                     .authorizeRequests()
                     .antMatchers("/assets/*").permitAll()
-                    .anyRequest().hasAnyRole("USER", "ADMIN")
+                    .anyRequest().hasAnyAuthority("USER", "ADMIN")
     }
 
     @Autowired
