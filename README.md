@@ -25,7 +25,7 @@ The example controller uses `KeycloakRestTemplate` to request a resource from th
 
 - CentOS 7
 - OpenJDK 8
-- Keycloak 1.9.0.Final (standalone)
+- Keycloak 1.9.1.Final (standalone)
 - Grails 3.1.3 (with Gradle 2.9)
 - Spring Boot 1.3.3.RELEASE
 
@@ -57,7 +57,7 @@ grails create-app client
 Inside your `dependencies` block, add the following:
 
 ```gradle
-compile "org.keycloak:keycloak-spring-security-adapter:1.9.0.Final"
+compile "org.keycloak:keycloak-spring-security-adapter:1.9.1.Final"
 runtime "org.jboss.logging:jboss-logging:3.3.0.Final"
 ```
 
@@ -165,7 +165,7 @@ protected void configure(HttpSecurity http) throws Exception {
             .and()
             .authorizeRequests()
                 .antMatchers("/assets/*").permitAll()
-                .anyRequest().hasAnyRole("USER", "ADMIN")
+                .anyRequest().hasAnyAuthority("USER", "ADMIN")
 }
 ```
 
@@ -173,7 +173,7 @@ This does three things:
 
 1. Change the logoutSuccess URL from `/` to the SSO login page, otherwise it prevents us from securing the home page
 2. Allow anyone to access the `/assets` folder, otherwise your layout breaks on error pages
-3. Require USER or ADMIN roles for anything else
+3. Require USER or ADMIN role for anything else
 
 If you want to secure only specific paths, you can do this:
 
@@ -183,8 +183,8 @@ protected void configure(HttpSecurity http) throws Exception {
     super.configure http
     http
             .authorizeRequests()
-                .antMatchers("/admin/*").hasRole("ADMIN")
-                .antMatchers("/app/*").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/admin/*").hasAuthority("ADMIN")
+                .antMatchers("/app/*").hasAnyAuthority("USER", "ADMIN")
                 .anyRequest().permitAll()
 }
 ```

@@ -2,10 +2,10 @@
 
 KEYCLOAK_URI=http://localhost:8080/auth
 REALM_JSON=/opt/keycloak/grails-realm.json
-JBOSS_CLI=/opt/keycloak/keycloak-1.9.0.Final/bin/jboss-cli.sh
+JBOSS_CLI=$KEYCLOAK_HOME/bin/jboss-cli.sh
 
 echo -e "Starting Keycloak in background..."
-/opt/keycloak/keycloak-1.9.0.Final/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0 &
+$KEYCLOAK_HOME/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0 &
 until `$JBOSS_CLI -c "ls /deployment" &> /dev/null`; do
     sleep 1
 done
