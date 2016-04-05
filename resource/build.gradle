@@ -50,3 +50,8 @@ dependencies {
 task wrapper(type: Wrapper) {
     gradleVersion = '2.9'
 }
+
+// Copy system properties
+tasks.withType(JavaExec) {
+    systemProperties System.properties
+}
