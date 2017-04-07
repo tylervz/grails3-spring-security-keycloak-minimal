@@ -21,5 +21,23 @@ curl -s -S -X DELETE -H "Authorization: Bearer $ACCESS_TOKEN" $KEYCLOAK_URI/admi
 echo "Importing realm..."
 curl -s -S -H "Content-Type: application/json" -H "Authorization: Bearer $ACCESS_TOKEN" -d @$REALM_JSON $KEYCLOAK_URI/admin/realms
 
+# HOW TO EXPORT A REALM
+# The Keycloak admin UI does not (yet) support exporting realms.
+# Assuming you changed something in Keycloak admin which you would like to keep,
+# first attach to the running keycloak instance like this:
+#
+# docker exec -it keycloak /bin/bash
+#
+# Next, without killing keycloak (which would stop the container), we'll run a second instance on a different port.
+# This is a round-about way to start the export process, but it works.
+#
+# cd /opt/keycloak
+# keycloak-3.0.0.Final/bin/standalone.sh \
+#    -Dkeycloak.migration.action=export \
+#    -Dkeycloak.migration.provider=singleFile \
+#    -Dkeycloak.migration.realmName=grails \
+#    -Dkeycloak.migration.file=grails-realm.json \
+#    -Djboss.socket.binding.port-offset=100
+
 echo "Shutting down..."
 $JBOSS_CLI -c ':shutdown' &> /dev/null

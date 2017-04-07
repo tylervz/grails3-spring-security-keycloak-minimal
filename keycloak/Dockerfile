@@ -10,11 +10,11 @@ RUN yum -y install java-1.8.0-openjdk.x86_64 && \
     
 USER keycloak
 
-ENV KEYCLOAK_VERSION 1.9.1.Final
+ENV KEYCLOAK_VERSION 3.0.0.Final
 ENV KEYCLOAK_HOME /opt/keycloak/keycloak-$KEYCLOAK_VERSION
 
 RUN curl http://download.jboss.org/keycloak/$KEYCLOAK_VERSION/keycloak-$KEYCLOAK_VERSION.tar.gz | tar -C $HOME -zx 
-RUN $KEYCLOAK_HOME/bin/add-user.sh -r master -u admin -p admin
+RUN $KEYCLOAK_HOME/bin/add-user-keycloak.sh -r master -u admin -p admin
 
 ADD . /opt/keycloak
 

@@ -1,31 +1,43 @@
 # Getting Started
 
-_This assumes you have Docker installed and the Docker host IP is 192.168.99.100. If you use a different IP, consider find/replace across the entire repository._
+_This assumes you have Docker installed and the Docker host IP is 127.0.0.1. If you use a different IP, consider find/replace across the entire repository._
 
-Run `./setup.sh` to run and provision a Keycloak server using Docker. Then, start both the client and the resource application in their own terminal.
+Run `./keycloak-setup.sh` to run and provision a Keycloak server using Docker. Then, start both the clients and the resource application in their own terminal.
 
 ```bash
-# Terminal 1
-./setup.sh
+# Terminal 1: Run Keycloak on http://localhost:8080/auth
+./keycloak-setup.sh
 
-# Terminal 2
+# Terminal 2: Run resource server (API) on http://localhost:8081/resource
+cd resource
+./gradlew bootRun
+
+# Terminal 3: Run Grails 3 based client on http://localhost:8082/client
 cd client
 ./gradlew bootRun
 
-# Terminal 3
-cd resource
-./gradlew bootRun
+# Terminal 4: Run JavaScript based client on http://localhost:8083
+cd vue
+./start.sh
 ```
 
-Next, open your browser to <http://localhost:8080/client>. You will be redirected to Keycloak where you can login using `user`/`user` or `admin`/`admin`. Next, select the `client.ExampleController` or navigate to it directly at <http://localhost:8080/client/example>.
+## Grails 3
+
+Open your browser to <http://localhost:8082/client>. You will be redirected to Keycloak where you can login using `user`/`user` or `admin`/`admin`. Next, select the `client.ExampleController` or navigate to it directly at <http://localhost:8082/client/example>.
 
 The example controller uses `KeycloakRestTemplate` to request a resource from the `resource` application running on <http://localhost:8081/resource> which is secured using bearer-only authentication.
+
+## Vue
+
+Open your browser to <http://localhost:8083/>. You will be redirected to Keycloak where you can login using `user`/`user` or `admin`/`admin`. There you will see a HTML table rendered using Vue containing 1.000 persons.
+
+The example uses `axios` and Keycloak's JavaScript adapter to request a resource from the `resource` application running on <http://localhost:8081/resource> which is secured using bearer-only authentication.
 
 ## Versions
 
 - CentOS 7
 - OpenJDK 8
-- Keycloak 1.9.1.Final (standalone)
+- Keycloak 3.0.0.Final (standalone)
 - Grails 3.1.3 (with Gradle 2.9)
 - Spring Boot 1.3.3.RELEASE
 
@@ -75,7 +87,7 @@ The Keycloak adapter automatically looks for it in `WEB-INF/keycloak.json`, whic
 {
   "realm": "grails",
   "realm-public-key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0Q2QN4cCxc10Azb7CC4uas7efiPZOwwUHykxLIfHtc8Oxw2PkoBrSeMyA/skCewDvMJZHmc2SOdnA6DpqZ6rlXe7R6yzM4ytHIg4ijE4+PYotiP0lUTTTgIf3mbvaAiLUTZV1sz4TjmcSk95v4mb4CsqaDMGE+2EPyp0DW0NBqaynaE4aVKuGOxJAosJBBZodAOlthpMU59hL7JqBXQJKNvQsyxnJYHgJnLWaGUn8D8+Y1MMJgVjSrmtxqv/2coVaSJrRqSYirn+GmYgRGRR/BUyIikUROyGLo5Y/LtUvuTQM1vetHkcd3LJP7MpWqG9PDzvx412FbPw0sISzCLgaQIDAQAB",
-  "auth-server-url": "http://192.168.99.100:8080/auth",
+  "auth-server-url": "http://localhost:8080/auth",
   "ssl-required": "external",
   "resource": "grails-client",
   "credentials": {

@@ -1,7 +1,7 @@
 {
   "realm": "grails",
   "realm-public-key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0Q2QN4cCxc10Azb7CC4uas7efiPZOwwUHykxLIfHtc8Oxw2PkoBrSeMyA/skCewDvMJZHmc2SOdnA6DpqZ6rlXe7R6yzM4ytHIg4ijE4+PYotiP0lUTTTgIf3mbvaAiLUTZV1sz4TjmcSk95v4mb4CsqaDMGE+2EPyp0DW0NBqaynaE4aVKuGOxJAosJBBZodAOlthpMU59hL7JqBXQJKNvQsyxnJYHgJnLWaGUn8D8+Y1MMJgVjSrmtxqv/2coVaSJrRqSYirn+GmYgRGRR/BUyIikUROyGLo5Y/LtUvuTQM1vetHkcd3LJP7MpWqG9PDzvx412FbPw0sISzCLgaQIDAQAB",
-  "auth-server-url": "http://192.168.99.100:8080/auth",
+  "auth-server-url": "http://localhost:8080/auth",
   "ssl-required": "external",
   "resource": "grails-client",
   "credentials": {

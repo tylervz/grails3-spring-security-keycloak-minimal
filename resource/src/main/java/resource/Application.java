@@ -12,13 +12,19 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.session.SessionManagementFilter;
 
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 
 @SpringBootApplication
@@ -41,6 +47,33 @@ public class Application extends SpringBootServletInitializer {
         @Autowired
         public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
             auth.authenticationProvider(keycloakAuthenticationProvider());
+        }
+
+        Filter corsFilter() {
+            return new Filter() {
+                @Override
+                public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
+                    HttpServletResponse response = (HttpServletResponse) servletResponse;
+                    HttpServletRequest request = (HttpServletRequest) servletRequest;
+
+                    response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+                    response.setHeader("Access-Control-Allow-Methods", request.getHeader("Access-Control-Request-Method"));
+                    response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
+                    response.setHeader("Access-Control-Allow-Credentials", "true");
+                    response.setHeader("Access-Control-Max-Age", "180");
+
+                    filterChain.doFilter(servletRequest, servletResponse);
+                }
+
+                @Override
+                public void init(FilterConfig filterConfig) throws ServletException {
+                }
+
+                @Override
+                public void destroy() {
+                }
+            };
         }
 
         /**
@@ -87,7 +120,18 @@ public class Application extends SpringBootServletInitializer {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             super.configure(http);
-            http.authorizeRequests().anyRequest().authenticated();
+            http
+                    .addFilterBefore(corsFilter(), SessionManagementFilter.class) // adds your custom CorsFilter
+                    .csrf().disable()
+                    .authorizeRequests()
+                    .antMatchers(HttpMethod.OPTIONS, "/**").permitAll() //allow CORS option calls
+                    .anyRequest().authenticated();
         }
+
+//        @Override
+//        public void configure(WebSecurity web) throws Exception {
+////            super.configure(web);
+//            web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
+//        }
     }
 }

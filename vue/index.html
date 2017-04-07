@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    *, :before, :after {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 14pt;
+      margin: 2em;
+    }
+    table {
+      border-collapse: collapse;
+    }
+    a {
+      color: #42c0de !important;
+    }
+    th {
+      text-align: left;
+      background-color: #42c0de;
+      color: white;
+    }
+    th, td {
+      padding: 0.5em 1em;
+    }
+    tr :first-child {
+      padding-left: 2em;
+    }
+    tr :last-child {
+      padding-right: 2em;
+    }  
+    tbody tr:nth-child(odd) {
+      background-color: #fafafe;
+    }
+    [v-cloak] { 
+      display: none; 
+    }
+    .is-roy {
+      background-color: #fe8 !important;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" v-cloak>
+    <h1>Hello you.</h1>
+    <p v-if="userName">You are logged in as <b>{{userName}}</b> (<a href="#" @click="logout">logout</a>)</p>
+    <table>
+      <thead>
+        <tr>
+          <th>First name</th>
+          <th>Last name</th>
+          <th>E-mail</th>
+          <th>Gender</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="person in persons" :class="{'is-roy': person.first_name === 'Roy'}">
+          <td>{{person.first_name}}</td>
+          <td>{{person.last_name}}</td>
+          <td>{{person.email}}</td>
+          <td>{{person.gender}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <script src="http://localhost:8080/auth/js/keycloak.js"></script>
+  <script src="js/axios.min.js"></script>
+  <script src="js/vue.min.js"></script>
+  <script>
+    var keycloak = Keycloak();
+    
+    var app = new Vue({
+      el: '#app',
+      data: { 
+        userName: '',
+        persons: [] 
+      },
+      methods: {
+        logout: function() {
+          keycloak.logout();
+        }
+      }
+    });
+    
+    var token = localStorage.getItem('KEYCLOAK_TOKEN');
+    console.log('TOKEN = ', token);
+    keycloak.init({ token: token, onLoad: 'login-required' }).success(function(authenticated) {
+        if (authenticated) {
+          localStorage.setItem('KEYCLOAK_TOKEN', keycloak.token);
+          
+          // Get user profile
+          keycloak.loadUserProfile().success(function(userProfile) {
+            app.userName = userProfile.username;
+          });
+          
+          var HTTP = axios.create({
+            baseURL: 'http://localhost:8081/resource',
+            headers: { 
+              Authorization: 'Bearer ' + localStorage.getItem('KEYCLOAK_TOKEN')
+            }
+          });
+    
+          HTTP.get('/data').then(function(response) {
+            app.persons = response.data;
+          });
+          
+        } else {
+          alert('not authenticated');
+        }
+    }).error(function() {
+        alert('failed to initialize');
+    });
+  </script>
+</body>
+</html>
