@@ -69,7 +69,7 @@ grails create-app client
 Inside your `dependencies` block, add the following:
 
 ```gradle
-compile "org.keycloak:keycloak-spring-security-adapter:1.9.1.Final"
+compile "org.keycloak:keycloak-spring-security-adapter:3.0.0.Final"
 runtime "org.jboss.logging:jboss-logging:3.3.0.Final"
 ```
 
