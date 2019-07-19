@@ -1,5 +1,6 @@
 #!/bin/bash
 
 docker rm $(docker stop keycloak)
-docker build -t keycloak keycloak
-docker run -it --name keycloak -p 8080:8080 keycloak
+docker rm $(docker stop keycloak6)
+docker build -t keycloak6 keycloak
+docker run -it --name keycloak6 -p 8080:8080 keycloak6
